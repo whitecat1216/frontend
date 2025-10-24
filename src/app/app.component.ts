@@ -6,7 +6,7 @@ import { EmployeeService } from './services/employee.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule], // 共通モジュールとHTTPモジュール
   templateUrl: './app.component.html',
   providers: [EmployeeService]
 })
@@ -16,8 +16,13 @@ export class AppComponent {
   constructor(private employeeService: EmployeeService) {}
 
   ngOnInit() {
-    this.employeeService.getEmployees().subscribe(data => {
-      this.employees = data;
+    this.loadEmployees();
+  }
+
+  loadEmployees() {
+    this.employeeService.getEmployees().subscribe({
+      next: (data) => (this.employees = data),
+      error: (err) => console.error('社員情報の取得に失敗しました', err)
     });
   }
 }
